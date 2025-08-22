@@ -1,6 +1,6 @@
 # Stage 1: Build frontend
 FROM node:18 AS frontend-builder
-WORKDIR ./frontend
+WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ .
@@ -8,19 +8,18 @@ RUN npm run build
 
 # Stage 2: Build backend and serve frontend
 FROM python:3.10
-WORKDIR /app
+WORKDIR /backend
 
-# Install backend dependencies
-RUN pip install --no-cache-dir -r ./requirements.txt
+# Copy backend requirements and install
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend code
-COPY backend/ ./backend/
+COPY backend/ .
 
-# Copy frontend build to backend/static
-COPY --from=frontend-builder ./frontend/build ./backend/static
+# Copy built frontend to backend/static (so FastAPI can serve it)
+COPY --from=frontend-builder /frontend/build ./static
 
-# Expose port needed by Hugging Face Spaces (default: 7860)
 EXPOSE 7860
 
-# Start FastAPI app (that serves static files from /backend/static)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860", "--root-path", ""]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
