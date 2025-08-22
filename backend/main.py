@@ -1,15 +1,17 @@
-# backend/main.py
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import sqlite3
 import pandas as pd
 import pickle
 import shap 
-
+import os
 
 from .data_ingestion import ingest_all_data_for_ticker
 
-DATABASE_NAME = "credit_data.db"
+# Always use an absolute path inside Docker
+DATABASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
+os.makedirs(DATABASE_DIR, exist_ok=True)  # Ensure directory exists
+DATABASE_NAME = os.path.join(DATABASE_DIR, "credit_data.db")
 app = FastAPI(title="CredTech API")
 
 from pathlib import Path
@@ -31,7 +33,6 @@ except FileNotFoundError:
     print(f"Error: model.pkl not found at {MODEL_PATH}. Make sure it's in the main project directory.")
 except Exception as e:
     print(f"An error occurred while loading the model: {e}")
-
 
 COMPANIES_TO_TRACK = {
     "AAPL": "Apple",
