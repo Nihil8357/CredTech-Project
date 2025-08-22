@@ -11,7 +11,7 @@ COPY backend/ backend/
 COPY frontend/ frontend/
 
 # Copy your main launcher script
-COPY app.py .
+COPY ./frontend/app.py .
 
 EXPOSE 7860
 
