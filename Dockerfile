@@ -2,12 +2,19 @@ FROM python:3.10
 
 WORKDIR /code
 
+# Copy and install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy backend and frontend code
 COPY backend/ backend/
 COPY frontend/ frontend/
 
-EXPOSE 8501
+# Expose ports for backend and frontend
+EXPOSE 8000 8501
 
-CMD ["streamlit", "run", "frontend/app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+# Use a shell script to start both services
+COPY start.sh .
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
