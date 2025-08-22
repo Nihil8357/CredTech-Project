@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+apscheduler
+pandas
+yfinance
+pandas-datareader
+newsapi-python
+setuptools
+scikit-learn
+shap
+streamlit
+requests
+plotly
