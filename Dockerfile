@@ -10,14 +10,14 @@ RUN npm run build
 FROM python:3.10
 WORKDIR /backend
 
-# Copy backend requirements and install
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy requirements.txt from repo root and install dependencies
+COPY requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 # Copy backend code
 COPY backend/ .
 
-# Copy built frontend to backend/static (so FastAPI can serve it)
+# Copy built frontend to backend/static
 COPY --from=frontend-builder /frontend/build ./static
 
 EXPOSE 7860
