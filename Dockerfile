@@ -2,17 +2,14 @@ FROM python:3.10
 
 WORKDIR /code
 
-# Install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend and frontend code
+# Copy both backend and frontend
 COPY backend/ backend/
 COPY frontend/ frontend/
 
-# Copy your main launcher script
-COPY ./frontend/app.py .
-
 EXPOSE 7860
 
-CMD ["python", "app.py"]
+# Launch Streamlit frontend (recommended entry point for Spaces)
+CMD ["streamlit", "run", "frontend/app.py", "--server.port", "7860", "--server.address", "0.0.0.0"]
