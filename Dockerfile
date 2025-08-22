@@ -1,6 +1,6 @@
 # Stage 1: Build frontend
 FROM node:18 AS frontend-builder
-WORKDIR /app/frontend
+WORKDIR ./frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ .
@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 COPY backend/ ./backend/
 
 # Copy frontend build to backend/static
-COPY --from=frontend-builder /app/frontend/build ./backend/static
+COPY --from=frontend-builder ./frontend/build ./backend/static
 
 # Expose port needed by Hugging Face Spaces (default: 7860)
 EXPOSE 7860
